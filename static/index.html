@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crypto Intel Pro | Premium Analytics</title>
+    <link rel="stylesheet" href="static/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="static/chart.min.js"></script>
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="logo">
+          <i class="fa-solid fa-bolt-lightning"></i>
+          <span>INTEL PRO</span>
+        </div>
+        <nav id="sidebar-nav">
+          <a href="#" class="active" data-view="overview"><i class="fa-solid fa-house"></i> Overview</a>
+          <a href="#" data-view="analytics"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+          <a href="#" data-view="portfolio"><i class="fa-solid fa-wallet"></i> Portfolio</a>
+          <a href="#" data-view="settings"><i class="fa-solid fa-gear"></i> Settings</a>
+        </nav>
+        <div class="sync-status">
+          <p>ETL STATUS</p>
+          <div class="status-indicator"><span class="dot"></span> Active</div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="content">
+        <header class="top-nav">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+              type="text"
+              id="coinSearch"
+              placeholder="Search assets (BTC, Ethereum...)"
+            />
+          </div>
+          <div class="user-profile">
+            <span id="lastUpdated">Last sync: --:--</span>
+            <button class="btn-refresh" id="refreshBtn">
+              <i class="fa-solid fa-rotate"></i>
+            </button>
+            <div class="avatar">S</div>
+          </div>
+        </header>
+
+        <!-- Views Container -->
+        <div id="views-container">
+          <!-- Overview View -->
+          <section id="view-overview" class="view-section active">
+            <div class="dashboard-grid">
+              <!-- KPI Row -->
+              <div class="kpi-container">
+                <div class="kpi-card" id="kpi-market-cap">
+                  <div class="card-header">
+                    <span class="title">Market Cap</span>
+                    <i class="fa-solid fa-earth-americas"></i>
+                  </div>
+                  <div class="value" id="val-market-cap">$--</div>
+                  <div class="delta positive" id="delta-market-cap">Live Sync</div>
+                </div>
+                <div class="kpi-card" id="kpi-top-gainer">
+                  <div class="card-header">
+                    <span class="title">Top Gainer</span>
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+                  </div>
+                  <div class="value" id="val-top-gainer">--</div>
+                  <div class="delta positive" id="delta-top-gainer">0.00%</div>
+                </div>
+                <div class="kpi-card" id="kpi-volatility">
+                  <div class="card-header">
+                    <span class="title">Volatility Peak</span>
+                    <i class="fa-solid fa-bolt"></i>
+                  </div>
+                  <div class="value" id="val-volatility">--</div>
+                  <div class="delta negative" id="delta-volatility">High impact</div>
+                </div>
+                <div class="kpi-card" id="kpi-avg-price">
+                  <div class="card-header">
+                    <span class="title">Avg Price</span>
+                    <i class="fa-solid fa-coins"></i>
+                  </div>
+                  <div class="value" id="val-avg-price">$--</div>
+                  <div class="delta" id="delta-avg-price">Global Index</div>
+                </div>
+              </div>
+
+              <!-- Charts Row -->
+              <div class="charts-container">
+                <div class="chart-card main-chart">
+                  <h3><i class="fa-solid fa-chart-area"></i> Price Performance Distribution</h3>
+                  <canvas id="priceChart"></canvas>
+                </div>
+                <div class="chart-card sub-chart">
+                  <h3><i class="fa-solid fa-chart-pie"></i> Market Dominance</h3>
+                  <canvas id="dominanceChart"></canvas>
+                </div>
+              </div>
+
+              <!-- Table Container -->
+              <div class="table-container">
+                <div class="table-header">
+                  <h3><i class="fa-solid fa-list-ul"></i> Market Assets</h3>
+                  <div class="table-filters">
+                    <span>Filter by:</span>
+                    <button class="active">All</button>
+                    <button>Gainers</button>
+                    <button>Losers</button>
+                  </div>
+                </div>
+                <table id="assetTable">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Asset</th>
+                      <th>Price</th>
+                      <th>24h Change</th>
+                      <th>Market Cap</th>
+                      <th>Volume</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="assetBody">
+                    <!-- JS will populate -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Analytics View -->
+          <section id="view-analytics" class="view-section">
+            <div class="view-header">
+                <h2><i class="fa-solid fa-chart-line"></i> Advanced Analytics</h2>
+                <p>Deep dive into market trends and volatility metrics.</p>
+            </div>
+            <div class="analytics-grid">
+                <div class="chart-card large">
+                    <h3><i class="fa-solid fa-gauge-high"></i> Volatility Index</h3>
+                    <canvas id="volatilityChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3><i class="fa-solid fa-layer-group"></i> Top Volume Assets</h3>
+                    <canvas id="sectorChart"></canvas>
+                </div>
+            </div>
+          </section>
+
+          <!-- Portfolio View -->
+          <section id="view-portfolio" class="view-section">
+            <div class="view-header">
+                <h2><i class="fa-solid fa-wallet"></i> My Portfolio</h2>
+                <p>Track your digital asset holdings and total value.</p>
+            </div>
+            <!-- Coming Soon Placeholder -->
+            <div class="coming-soon">
+                <i class="fa-solid fa-person-digging"></i>
+                <h3>Feature Under Construction</h3>
+                <p>We are currently integrating wallet support and transaction tracking.</p>
+                <button class="btn-primary" onclick="switchView('overview')">Back to Dashboard</button>
+            </div>
+          </section>
+
+          <!-- Settings View -->
+          <section id="view-settings" class="view-section">
+            <div class="view-header">
+                <h2><i class="fa-solid fa-gear"></i> Settings</h2>
+                <p>Configure your dashboard preferences and API integrations.</p>
+            </div>
+            <div class="settings-card">
+                <h3>General Settings</h3>
+                <div class="setting-item">
+                    <span>Dark Mode</span>
+                    <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                </div>
+                <div class="setting-item">
+                    <span>Auto-Refresh (1m)</span>
+                    <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
+                </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- Detail Modal (Bespoke UI) -->
+    <div id="coinModal" class="modal">
+      <div class="modal-content glass">
+        <span class="close">&times;</span>
+        <div id="modalData"></div>
+      </div>
+    </div>
+
+    <script src="static/main.js"></script>
+  </body>
+</html>
