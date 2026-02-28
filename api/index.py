@@ -7,15 +7,16 @@ import os
 app = FastAPI(title="Crypto Intel API")
 analysis = CryptoAnalysis()
 
-# Serve static files
-if not os.path.exists("static"):
-    os.makedirs("static")
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Serve static files from the root static directory
+# Vercel's relative paths start from the project root
+static_path = os.path.join(os.path.dirname(__file__), "..", "static")
 
 @app.get("/")
 async def read_index():
-    return FileResponse("static/index.html")
+    index_file = os.path.join(static_path, "index.html")
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+    return {"error": "Dashboard index not found"}
 
 @app.get("/api/market-data")
 async def get_market_data():
@@ -48,7 +49,7 @@ async def search_coin(q: str):
     df = analysis.get_all_data()
     if df.empty:
         return {"error": "No data available"}
-        
+    
     q = q.lower()
     result = df[
         (df['name'].str.lower().str.contains(q, na=False)) | 
@@ -57,9 +58,10 @@ async def search_coin(q: str):
     
     if result.empty:
         raise HTTPException(status_code=404, detail="Coin not found")
-        
+    
     return result.to_dict(orient="records")
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# Static files should be served via vercel.json for better performance, 
+# but keeping this as a fallback if needed for certain assets
+if os.path.exists(static_path):
+    app.mount("/static", StaticFiles(directory=static_path), name="static")
